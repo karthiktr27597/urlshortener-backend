@@ -97,7 +97,7 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ message: "Incorrect username or password" })
         } else {
             // console.log(user, usercheck.password)
-            if (usercheck.active === false) {
+            if (usercheck.active !== true) {
                 return res.status(400).json({ message: "Account not activated, Plese check your email for activate your account" })
             }
             const passwordVerify = await bcrypt.compare(user.password, usercheck.password)
