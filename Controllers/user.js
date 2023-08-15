@@ -34,7 +34,7 @@ export function generateToken(id) {
     return jwt.sign(
         { id },
         process.env.SECURE_KEY,
-        { expiresIn: "1d" }
+        { expiresIn: "10d" }
     )
 }
 
@@ -42,7 +42,7 @@ export function randomToken(email) {
     return jwt.sign(
         { email },
         process.env.SECURE_KEY,
-        { expiresIn: "1d" }
+        { expiresIn: "10m" }
     )
 }
 

@@ -7,7 +7,7 @@ export async function addURL(req, res) {
         return res.status(400).json({ message: "Invalid URL" })
     }
     const nanoID = nanoid(7);
-    console.log(nanoID)
+   // console.log(nanoID)
 
     const date = new Date()
     const month = date.getMonth() + 1;

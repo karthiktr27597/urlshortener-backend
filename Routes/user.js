@@ -35,7 +35,7 @@ router.post("/signup", async (req, res) => {
             if (!insertedUser.acknowledged) {
                 return res.status(400).json({ message: "error found in insert user" })
             }
-            const activationLink = `https://urlshortenerpage.netlify.app/user/signup/active/${process.env.ACTIVATION_LINK}/${hasheduser._id}`
+            const activationLink = `https://urlshortener-backend-qyy5.onrender.com/user/signup/active/${process.env.ACTIVATION_LINK}/${hasheduser._id}`
             const mailOptions = {
                 from: 'resetpasswordkar27@hotmail.com',
                 to: user.email,
@@ -97,6 +97,9 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ message: "Incorrect username or password" })
         } else {
             // console.log(user, usercheck.password)
+            if (usercheck.active === false) {
+                return res.status(400).json({ message: "Account not activated, Plese check your email for activate your account" })
+            }
             const passwordVerify = await bcrypt.compare(user.password, usercheck.password)
             if (!passwordVerify) {
                 return res.status(400).json({ message: "Incorrect username or password" })
