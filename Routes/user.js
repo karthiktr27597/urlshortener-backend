@@ -126,13 +126,16 @@ router.post("/mailverify", async (req, res) => {
         }
         const usercheck = await findEmail(email)
         if (!usercheck) {
-            return res.status(400).json({ message: "mail varification failed" })
+            return res.status(400).json({ message: "mail varification failed, Invalid mail" })
+        }
+        if (usercheck.active !== true) {
+            return res.status(400).json({ message: "Account not activated, Plese check your email for activate your account" })
         }
         return res.status(200).json({ message: "mail verified successfully" })
 
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: "internal server error" })
+        res.status(500).json({ message: "Internal server error" })
     }
 })
 
