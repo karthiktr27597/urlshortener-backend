@@ -181,7 +181,6 @@ router.post("/passwordreset/:rtoken/:mail", async (req, res) => {
     try {
         const { rtoken, mail } = req.params;
         const { newpassword, confirmpassword } = req.body;
-        // console.log(req.body);
         if (!rtoken || !mail) {
             return res.status(400).json({ message: "Invalid link" })
         }
