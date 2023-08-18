@@ -42,7 +42,7 @@ export function randomToken(email) {
     return jwt.sign(
         { email },
         process.env.SECURE_KEY,
-        { expiresIn: "10m" }
+        { expiresIn: "30m" }
     )
 }
 
@@ -60,9 +60,9 @@ export function deleterandomToken(email, data) {
         .updateOne({ email: email }, { $unset: data })
 }
 
-export function updateNewPassword(email, hashedpassword) {
+export function updateNewPassword(email, newPassword) {
     return client
         .db("urlshortener")
         .collection("users")
-        .findOneAndUpdate({ email: email }, { $set: { password: hashedpassword } })
+        .findOneAndUpdate({ email: email }, { $set: newPassword })
 }

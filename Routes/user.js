@@ -89,10 +89,12 @@ router.get(`/signup/active/${process.env.ACTIVATION_LINK}/:id`, async (req, res)
 router.post("/login", async (req, res) => {
     try {
         const user = req.body;
+        // console.log(user);
         if (!user.email || !user.password) {
             return res.status(400).json({ message: "Incorrect Input" })
         }
         const usercheck = await findEmail(user.email)
+        // console.log(usercheck)
         if (!usercheck) {
             return res.status(400).json({ message: "Incorrect username or password" })
         } else {
@@ -100,6 +102,7 @@ router.post("/login", async (req, res) => {
             if (usercheck.active !== true) {
                 return res.status(400).json({ message: "Account not activated, Plese check your email for activate your account" })
             }
+            // console.log(user.password);
             const passwordVerify = await bcrypt.compare(user.password, usercheck.password)
             if (!passwordVerify) {
                 return res.status(400).json({ message: "Incorrect username or password" })
@@ -151,7 +154,7 @@ router.post("/forgotpassword", async (req, res) => {
             from: 'resetpasswordkar27@hotmail.com',
             to: req.body.email,
             subject: "URL Shortener App- Password reset link",
-            text: `Click below link to reset your password and this link valid till 10 minutes only: ${url}`
+            text: `Click below link to reset your password and this link valid till 30 minutes only: ${url}`
         }
         const savedRandomkey = saverandomToken(req.body.email, { randomkey: rtoken })
         if (!savedRandomkey) {
@@ -178,6 +181,7 @@ router.post("/passwordreset/:rtoken/:mail", async (req, res) => {
     try {
         const { rtoken, mail } = req.params;
         const { newpassword, confirmpassword } = req.body;
+        // console.log(req.body);
         if (!rtoken || !mail) {
             return res.status(400).json({ message: "Invalid link" })
         }
@@ -188,9 +192,9 @@ router.post("/passwordreset/:rtoken/:mail", async (req, res) => {
         if (newpassword !== confirmpassword) {
             return res.status(400).json({ message: "password not matched" })
         }
-        const solt = await bcrypt.genSalt(10);
-        const hashedpassword = await bcrypt.hash(newpassword, solt)
-        const updatedPassword = await updateNewPassword(mail, hashedpassword)
+        const salt = await bcrypt.genSalt(10);
+        const hashedpassword = await bcrypt.hash(newpassword, salt)
+        const updatedPassword = await updateNewPassword(mail, { password: hashedpassword })
         if (!updatedPassword) {
             return res.status(400).json({ message: "Error found in update password" })
         }
